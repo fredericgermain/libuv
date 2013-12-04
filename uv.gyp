@@ -156,8 +156,10 @@
             'src/unix/udp.c',
           ],
           'link_settings': {
-            'libraries': [ '-lm' ],
             'conditions': [
+              ['OS!="mac"', {
+                'libraries': [ '-lm' ],
+              }],
               ['OS=="solaris"', {
                 'ldflags': [ '-pthreads' ],
               }],
