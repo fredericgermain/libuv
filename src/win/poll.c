@@ -183,9 +183,12 @@ static void uv__fast_poll_process_poll_req(uv_loop_t* loop, uv_poll_t* handle,
     events &= handle->events & ~mask_events;
 
     if (afd_poll_info->Handles[0].Events & AFD_POLL_LOCAL_CLOSE) {
-      /* Stop polling. */
-      handle->events = 0;
-      uv__handle_stop(handle);
+		/* a close socket happened before of after a uv_poll_close */
+		if ( !(handle->flags & UV__HANDLE_CLOSING) ) {
+			 /* Stop polling. */
+			 handle->events = 0;
+			uv__handle_stop(handle);
+		}
     }
 
     if (events != 0) {
